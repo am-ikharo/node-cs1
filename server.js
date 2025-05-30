@@ -2,9 +2,9 @@ import {createServer} from 'http';
 const PORT = process.env.PORT;
 
 const users = [
-    {id:1, name:'John Doe'},
-    {id:2, name:'Jane Doe'},
-    {id:3, name:'Jim Doe'}
+    {'id':1, 'name':'John Doe'},
+    {'id':2, 'name':'Jane Doe'},
+    {'id':3, 'name':'Jim Doe'}
 ]
 
 const logger = (req, res, next) => {
@@ -52,7 +52,21 @@ const notFoundHandler = (req, res) => {
 // lets create a POST handler
 
 const createUserHandle = (req, res) => {
-
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+    
+        const newUser = JSON.parse(body);
+        users.push(newUser);
+        res.statusCode = 201;
+        res.write(JSON.stringify(newUser));
+        res.end();
+    
+        
+        
+    });
 }
 
 const Server = createServer((req, res) => {
@@ -62,6 +76,8 @@ const Server = createServer((req, res) => {
                 getUsersHandler(req, res); 
             }else if(req.url.match(/\/api\/user\/[0-9]+/) && req.method === 'GET'){
                 getUserByIdHandler(req, res);
+            }else if (req.url === '/api/users' && req.method === 'POST'){
+                createUserHandle(req, res);
             }else{
                 notFoundHandler(req, res);
             }
