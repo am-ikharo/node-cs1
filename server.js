@@ -37,7 +37,7 @@ const getUserByIdHandler = (req, res) => {
     }else{
         res.statusCode = 404;
         res.write(JSON.stringify({message: 'user Not found'}));
-        res.end();
+        res.end(); 
     }
 }
 
@@ -47,6 +47,12 @@ const notFoundHandler = (req, res) => {
     res.statusCode = 404;
     res.write(JSON.stringify({message: 'Route Not found'}));
     res.end();
+}
+
+// lets create a POST handler
+
+const createUserHandle = (req, res) => {
+
 }
 
 const Server = createServer((req, res) => {
